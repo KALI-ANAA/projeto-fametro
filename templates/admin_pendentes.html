@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Reservas Pendentes | NEXUS LAB{% endblock %}
+
+{% block content %}
+
+<section class="card hero-card">
+    <h1>Reservas Pendentes</h1>
+    <p class="muted">
+        Analise e aprove ou recuse as solicitações de reserva.
+    </p>
+</section>
+
+<section class="card">
+
+{% if not pendentes %}
+
+<p class="muted">Nenhuma reserva pendente.</p>
+
+{% else %}
+
+<div class="table-wrap">
+<table>
+
+<thead>
+<tr>
+<th>Professor</th>
+<th>Laboratório</th>
+<th>Data</th>
+<th>Turno</th>
+<th>Aprovar</th>
+<th>Recusar</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for r in pendentes %}
+
+<tr>
+
+<td>{{ r.professor.nome }}</td>
+
+<td>{{ r.laboratorio.nome }}</td>
+
+<td>{{ r.data.strftime('%d/%m/%Y') }}</td>
+
+<td>{{ turno_labels[r.turno] }}</td>
+
+<td>
+
+<form method="post"
+action="{{ url_for('update_reserva_status', reserva_id=r.id) }}">
+
+<input type="hidden" name="acao" value="aprovar">
+
+<button class="btn-success">Aprovar</button>
+
+</form>
+
+</td>
+
+<td>
+
+<form method="post"
+action="{{ url_for('update_reserva_status', reserva_id=r.id) }}">
+
+<input type="hidden" name="acao" value="recusar">
+
+<button class="btn-danger">Recusar</button>
+
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+</table>
+</div>
+
+{% endif %}
+
+</section>
+
+{% endblock %}

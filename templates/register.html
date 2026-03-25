@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro Professor | NEXUS LAB{% endblock %}
+
+{% block content %}
+<section class="card center-card">
+    <h1>Cadastro de Professor</h1>
+    <p class="muted">Esse cadastro cria conta com perfil professor.</p>
+
+    <form method="post">
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="senha" placeholder="Senha" required>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <p class="small muted mt-12">
+        Já possui conta? <a href="{{ url_for('login') }}">Entrar</a>
+    </p>
+</section>
+{% endblock %}

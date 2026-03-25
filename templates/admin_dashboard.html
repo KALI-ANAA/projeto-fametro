@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Técnico | NEXUS LAB{% endblock %}
+
+{% block content %}
+{% set day_names = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"] %}
+
+<section class="card hero-card hero-card-center hero-card-small">
+    <h1>Painel do Técnico</h1>
+    <p class="muted hero-message">
+        Gerencie o sistema por módulos.
+    </p>
+</section>
+
+<section class="dashboard-cards dashboard-cards-compact">
+    <a class="stat-card stat-tab" href="{{ url_for('admin_laboratorios') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7.5 12 3l9 4.5-9 4.5L3 7.5Z"></path>
+                    <path d="M3 7.5V16.5L12 21l9-4.5V7.5"></path>
+                    <path d="M12 12v9"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Laboratórios</div>
+            <div class="stat-number">{{ total_laboratorios }}</div>
+            <div class="stat-label">cadastros</div>
+        </div>
+    </a>
+
+    <a class="stat-card stat-tab" href="{{ url_for('admin_professores') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9.5" cy="7" r="4"></circle>
+                    <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M14 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Professores</div>
+            <div class="stat-number">{{ total_professores }}</div>
+            <div class="stat-label">contas</div>
+        </div>
+    </a>
+
+    <a class="stat-card stat-tab" href="{{ url_for('admin_agendamentos') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <path d="M16 2v4"></path>
+                    <path d="M8 2v4"></path>
+                    <path d="M3 10h18"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Agendamentos</div>
+            <div class="stat-number">{{ agendamentos_semana }}</div>
+            <div class="stat-label">na semana</div>
+        </div>
+    </a>
+
+    <a class="stat-card stat-tab" href="{{ url_for('admin_pendentes') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 9v4"></path>
+                    <path d="M12 17h.01"></path>
+                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Pendentes</div>
+            <div class="stat-number">{{ total_pendentes }}</div>
+            <div class="stat-label">aguardando</div>
+        </div>
+    </a>
+
+    <a class="stat-card stat-tab" href="{{ url_for('admin_feriados') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 2v4"></path>
+                    <path d="M16 2v4"></path>
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <path d="M3 10h18"></path>
+                    <path d="M8 14h.01"></path>
+                    <path d="M12 14h.01"></path>
+                    <path d="M16 14h.01"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Feriados</div>
+            <div class="stat-number">{{ total_feriados }}</div>
+            <div class="stat-label">bloqueios</div>
+        </div>
+    </a>
+
+    <a class="stat-card stat-tab" href="{{ url_for('admin_configuracoes') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Configurações</div>
+            <div class="stat-number">{{ total_regras_ativas }}</div>
+            <div class="stat-label">regras</div>
+        </div>
+    </a>
+</section>
+
+<section class="card">
+    <div class="calendar-nav pretty-calendar-nav">
+        <a class="btn-secondary nav-week-btn" href="{{ url_for('admin_dashboard', week=week_prev) }}">Semana anterior</a>
+        <strong class="calendar-nav-title">Semana de {{ week_start.strftime('%d/%m/%Y') }}</strong>
+        <a class="btn-secondary nav-week-btn" href="{{ url_for('admin_dashboard', week=week_next) }}">Próxima semana</a>
+    </div>
+
+    {% if not calendar_rows %}
+        <p class="muted">Nenhum laboratório cadastrado.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Laboratório</th>
+                        <th>Turno</th>
+                        {% for day in week_days %}
+                            <th>{{ day_names[loop.index0] }}<br>{{ day.strftime('%d/%m') }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in calendar_rows %}
+                        <tr>
+                            <td>{{ row.laboratorio_nome }}</td>
+                            <td>{{ row.turno_label }}</td>
+                            {% for slot in row.slots %}
+                                <td class="status-{{ slot.status }}">
+                                    <strong>{{ slot.title }}</strong>
+                                    {% if slot.detail %}
+                                        <div class="small muted">{{ slot.detail }}</div>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

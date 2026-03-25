@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Professores | NEXUS LAB{% endblock %}
+
+{% block content %}
+<section class="card hero-card">
+    <h1>Professores</h1>
+    <p class="muted">Cadastre, edite e acompanhe os professores do sistema.</p>
+</section>
+
+<div class="grid two">
+    <section class="card">
+        <h2>Cadastrar professor</h2>
+        <form method="post" action="{{ url_for('create_professor') }}">
+            <input type="text" name="nome" placeholder="Nome do professor" required>
+            <input type="email" name="email" placeholder="Email do professor" required>
+            <input type="password" name="senha" placeholder="Senha inicial" required>
+            <button type="submit">Salvar professor</button>
+        </form>
+    </section>
+
+    <section class="card summary-card">
+        <h2>Resumo</h2>
+        <p class="muted">Total de professores cadastrados</p>
+        <div class="summary-number">{{ total_professores }}</div>
+    </section>
+</div>
+
+<section class="card">
+    <h2>Professores cadastrados</h2>
+    {% if not professores %}
+        <p class="muted">Ainda não existem professores cadastrados.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Editar</th>
+                        <th>Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for professor in professores %}
+                        <tr>
+                            <td>{{ professor.id }}</td>
+                            <td>{{ professor.nome }}</td>
+                            <td>{{ professor.email }}</td>
+                            <td>
+                                <button
+                                    class="btn-inline js-open-professor-modal"
+                                    type="button"
+                                    data-action="{{ url_for('update_professor', professor_id=professor.id) }}"
+                                    data-nome="{{ professor.nome }}"
+                                    data-email="{{ professor.email }}"
+                                >
+                                    Editar
+                                </button>
+                            </td>
+                            <td>
+                                <form method="post"
+                                      action="{{ url_for('delete_professor', professor_id=professor.id) }}"
+                                      class="js-confirm-delete"
+                                      data-confirm-message="Deseja excluir este professor? As reservas vinculadas também serão removidas.">
+                                    <button class="btn-danger" type="submit">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+
+<div class="modal-backdrop" id="professor-modal" role="dialog" aria-modal="true" aria-labelledby="professor-modal-title">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3 class="modal-title" id="professor-modal-title">Editar professor</h3>
+            <button type="button" class="modal-close js-close-modal" data-modal="professor-modal">Fechar</button>
+        </div>
+
+        <form method="post" id="professor-edit-form">
+            <input type="text" name="nome" id="professor-modal-nome" required>
+            <input type="email" name="email" id="professor-modal-email" required>
+            <input type="password" name="senha" placeholder="Nova senha (opcional)">
+            <div class="modal-actions">
+                <button type="button" class="btn-ghost js-close-modal" data-modal="professor-modal">Cancelar</button>
+                <button type="submit">Salvar alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) modal.classList.add("active");
+        }
+
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove("active");
+        }
+
+        var form = document.getElementById("professor-edit-form");
+        var inputNome = document.getElementById("professor-modal-nome");
+        var inputEmail = document.getElementById("professor-modal-email");
+
+        document.querySelectorAll(".js-open-professor-modal").forEach(function (button) {
+            button.addEventListener("click", function () {
+                form.action = button.dataset.action || "";
+                inputNome.value = button.dataset.nome || "";
+                inputEmail.value = button.dataset.email || "";
+                openModal("professor-modal");
+            });
+        });
+
+        document.querySelectorAll(".js-close-modal").forEach(function (button) {
+            button.addEventListener("click", function () {
+                closeModal(button.dataset.modal);
+            });
+        });
+
+        document.querySelectorAll(".modal-backdrop").forEach(function (modal) {
+            modal.addEventListener("click", function (event) {
+                if (event.target === modal) {
+                    modal.classList.remove("active");
+                }
+            });
+        });
+    })();
+</script>
+{% endblock %}
