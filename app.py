@@ -941,6 +941,7 @@ def create_reserva():
     notify_success("Solicitação enviada com sucesso para aprovação do técnico.")
     return redirect(url_for("professor_minhas_reservas"))
 
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
