@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Professor | NEXUS LAB{% endblock %}
+
+{% block content %}
+{% set day_names = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"] %}
+
+<section class="card hero-card hero-card-center hero-card-small">
+    <h1>Painel do Professor</h1>
+    <p class="muted hero-message">
+        Consulte a agenda semanal e acesse seus módulos.
+    </p>
+</section>
+
+<section class="dashboard-cards dashboard-cards-compact">
+    <a class="stat-card stat-tab" href="{{ url_for('professor_solicitar') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14"></path>
+                    <path d="M5 12h14"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Solicitar</div>
+            <div class="stat-number">+</div>
+            <div class="stat-label">novo agendamento</div>
+        </div>
+    </a>
+
+    <a class="stat-card stat-tab" href="{{ url_for('professor_minhas_reservas') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <path d="M16 2v4"></path>
+                    <path d="M8 2v4"></path>
+                    <path d="M3 10h18"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Minhas reservas</div>
+            <div class="stat-number">{{ minhas_reservas|length }}</div>
+            <div class="stat-label">solicitações</div>
+        </div>
+    </a>
+
+    <a class="stat-card stat-tab" href="{{ url_for('professor_feriados') }}">
+        <div class="stat-top">
+            <div class="stat-icon-wrap">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 2v4"></path>
+                    <path d="M16 2v4"></path>
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <path d="M3 10h18"></path>
+                </svg>
+            </div>
+            <div class="stat-title">Feriados</div>
+            <div class="stat-number">{{ feriados_semana|length }}</div>
+            <div class="stat-label">na semana</div>
+        </div>
+    </a>
+</section>
+
+<section class="card section-target" id="sec-calendario">
+    <div class="calendar-nav pretty-calendar-nav">
+        <a class="btn-secondary nav-week-btn" href="{{ url_for('professor_dashboard', week=week_prev) }}">Semana anterior</a>
+        <strong class="calendar-nav-title">Semana de {{ week_start.strftime('%d/%m/%Y') }}</strong>
+        <a class="btn-secondary nav-week-btn" href="{{ url_for('professor_dashboard', week=week_next) }}">Próxima semana</a>
+    </div>
+
+    {% if not calendar_rows %}
+        <p class="muted">Nenhum laboratório cadastrado.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Laboratório</th>
+                        <th>Turno</th>
+                        {% for day in week_days %}
+                            <th>{{ day_names[loop.index0] }}<br>{{ day.strftime('%d/%m') }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in calendar_rows %}
+                        <tr>
+                            <td>{{ row.laboratorio_nome }}</td>
+                            <td>{{ row.turno_label }}</td>
+                            {% for slot in row.slots %}
+                                <td class="status-{{ slot.status }}">
+                                    <strong>{{ slot.title }}</strong>
+                                    {% if slot.detail %}
+                                        <div class="small muted">{{ slot.detail }}</div>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

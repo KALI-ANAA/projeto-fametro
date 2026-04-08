@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Agendamentos | NEXUS LAB{% endblock %}
+
+{% block content %}
+{% set day_names = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"] %}
+
+<section class="card hero-card">
+    <h1>Agendamentos</h1>
+    <p class="muted">Visualize o calendário de reservas e o histórico recente.</p>
+</section>
+
+<section class="card">
+    <div class="calendar-nav pretty-calendar-nav">
+        <a class="btn-secondary nav-week-btn" href="{{ url_for('admin_agendamentos', week=week_prev) }}">Semana anterior</a>
+        <strong class="calendar-nav-title">Semana de {{ week_start.strftime('%d/%m/%Y') }}</strong>
+        <a class="btn-secondary nav-week-btn" href="{{ url_for('admin_agendamentos', week=week_next) }}">Próxima semana</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Laboratório</th>
+                    <th>Turno</th>
+                    {% for day in week_days %}
+                        <th>{{ day_names[loop.index0] }}<br>{{ day.strftime('%d/%m') }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in calendar_rows %}
+                    <tr>
+                        <td>{{ row.laboratorio_nome }}</td>
+                        <td>{{ row.turno_label }}</td>
+                        {% for slot in row.slots %}
+                            <td class="status-{{ slot.status }}">
+                                <strong>{{ slot.title }}</strong>
+                                {% if slot.detail %}
+                                    <div class="small muted">{{ slot.detail }}</div>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="card">
+    <h2>Histórico recente</h2>
+    {% if not recentes %}
+        <p class="muted">Nenhuma reserva registrada.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Professor</th>
+                        <th>Laboratório</th>
+                        <th>Data</th>
+                        <th>Turno</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in recentes %}
+                        <tr>
+                            <td>{{ r.professor.nome }}</td>
+                            <td>{{ r.laboratorio.nome }}</td>
+                            <td>{{ r.data.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ turno_labels[r.turno] }}</td>
+                            <td>{{ status_labels[r.status] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Login | NEXUS LAB{% endblock %}
+
+{% block content %}
+<section class="login-page">
+    <div class="card login-card">
+        <h1>Login</h1>
+        <p class="muted">Use seu acesso de técnico ou professor para entrar no sistema.</p>
+
+        <form method="post">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+
+            <div class="login-actions">
+                <button type="submit">Entrar</button>
+            </div>
+        </form>
+
+        <p class="small muted login-note">
+            O cadastro de professor é realizado pelo técnico no painel administrativo.
+        </p>
+    </div>
+</section>
+{% endblock %}

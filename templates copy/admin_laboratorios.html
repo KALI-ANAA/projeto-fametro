@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Laboratórios | NEXUS LAB{% endblock %}
+
+{% block content %}
+<section class="card hero-card">
+    <h1>Laboratórios</h1>
+    <p class="muted">Cadastre, edite e visualize os laboratórios disponíveis no sistema.</p>
+</section>
+
+<div class="grid two">
+    <section class="card">
+        <h2>Cadastrar laboratório</h2>
+        <form method="post" action="{{ url_for('create_laboratorio') }}">
+            <input type="text" name="nome" placeholder="Nome do laboratório" required>
+            <textarea name="descricao" rows="4" placeholder="Descrição do laboratório"></textarea>
+            <button type="submit">Salvar laboratório</button>
+        </form>
+    </section>
+
+    <section class="card summary-card">
+        <h2>Resumo</h2>
+        <p class="muted">Total de laboratórios cadastrados</p>
+        <div class="summary-number">{{ total_laboratorios }}</div>
+    </section>
+</div>
+
+<section class="card">
+    <h2>Laboratórios cadastrados</h2>
+    {% if not laboratorios %}
+        <p class="muted">Ainda não existem laboratórios cadastrados.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Editar</th>
+                        <th>Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lab in laboratorios %}
+                        <tr>
+                            <td>{{ lab.id }}</td>
+                            <td>{{ lab.nome }}</td>
+                            <td>{{ lab.descricao or '-' }}</td>
+                            <td>
+                                <button
+                                    class="btn-inline js-open-lab-modal"
+                                    type="button"
+                                    data-action="{{ url_for('update_laboratorio', laboratorio_id=lab.id) }}"
+                                    data-nome="{{ lab.nome }}"
+                                    data-descricao="{{ lab.descricao or '' }}"
+                                >
+                                    Editar
+                                </button>
+                            </td>
+                            <td>
+                                <form method="post"
+                                      action="{{ url_for('delete_laboratorio', laboratorio_id=lab.id) }}"
+                                      class="js-confirm-delete"
+                                      data-confirm-message="Deseja excluir este laboratório? As reservas vinculadas também serão removidas.">
+                                    <button class="btn-danger" type="submit">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+
+<div class="modal-backdrop" id="lab-modal" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3 class="modal-title" id="lab-modal-title">Editar laboratório</h3>
+            <button type="button" class="modal-close js-close-modal" data-modal="lab-modal">Fechar</button>
+        </div>
+
+        <form method="post" id="lab-edit-form">
+            <input type="text" name="nome" id="lab-modal-nome" required>
+            <textarea name="descricao" id="lab-modal-descricao" rows="4" placeholder="Descrição do laboratório"></textarea>
+            <div class="modal-actions">
+                <button type="button" class="btn-ghost js-close-modal" data-modal="lab-modal">Cancelar</button>
+                <button type="submit">Salvar alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) modal.classList.add("active");
+        }
+
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove("active");
+        }
+
+        var form = document.getElementById("lab-edit-form");
+        var inputNome = document.getElementById("lab-modal-nome");
+        var inputDescricao = document.getElementById("lab-modal-descricao");
+
+        document.querySelectorAll(".js-open-lab-modal").forEach(function (button) {
+            button.addEventListener("click", function () {
+                form.action = button.dataset.action || "";
+                inputNome.value = button.dataset.nome || "";
+                inputDescricao.value = button.dataset.descricao || "";
+                openModal("lab-modal");
+            });
+        });
+
+        document.querySelectorAll(".js-close-modal").forEach(function (button) {
+            button.addEventListener("click", function () {
+                closeModal(button.dataset.modal);
+            });
+        });
+
+        document.querySelectorAll(".modal-backdrop").forEach(function (modal) {
+            modal.addEventListener("click", function (event) {
+                if (event.target === modal) {
+                    modal.classList.remove("active");
+                }
+            });
+        });
+    })();
+</script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Home | NEXUS LAB{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h1>Bem-vindo ao NEXUS LAB</h1>
+    <p>Olá, {{ seusuario_nome }}</p>
+    <p class="muted">Email logado: {{ usuario_email }}</p>
+    <a class="btn-secondary" href="{{ url_for('logout') }}">Sair</a>
+</section>
+{% endblock %}

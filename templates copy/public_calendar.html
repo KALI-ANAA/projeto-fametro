@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Calendário de Laboratórios | NEXUS LAB{% endblock %}
+
+{% block content %}
+{% set day_names = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"] %}
+
+<section class="card hero-card hero-card-center page-title-center">
+    <h1>Agenda de Laboratório</h1>
+    <p class="muted">Tela pública para consulta de disponibilidade dos laboratórios.</p>
+</section>
+
+<section class="card">
+    <div class="calendar-nav pretty-calendar-nav">
+        <a class="btn-secondary nav-week-btn" href="{{ url_for('public_calendar', week=week_prev) }}">Semana anterior</a>
+        <strong class="calendar-nav-title">Semana de {{ week_start.strftime('%d/%m/%Y') }}</strong>
+        <a class="btn-secondary nav-week-btn" href="{{ url_for('public_calendar', week=week_next) }}">Próxima semana</a>
+    </div>
+
+    {% if not calendar_rows %}
+        <p class="muted">Nenhum laboratório cadastrado ainda.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Laboratório</th>
+                        <th>Turno</th>
+                        {% for day in week_days %}
+                            <th>{{ day_names[loop.index0] }}<br>{{ day.strftime('%d/%m') }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in calendar_rows %}
+                        <tr>
+                            <td>{{ row.laboratorio_nome }}</td>
+                            <td>{{ row.turno_label }}</td>
+                            {% for slot in row.slots %}
+                                <td class="status-{{ slot.status }}">
+                                    <strong>{{ slot.title }}</strong>
+                                    {% if slot.detail %}
+                                        <div class="small muted">{{ slot.detail }}</div>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+
+<section class="card">
+    <div class="legend-layout">
+        <div class="legend-content">
+            <h2>Informações da agenda</h2>
+            <ul class="info-list">
+                <li>Sábado fechado: {{ 'Sim' if agenda_config.sabado_fechado else 'Não' }}</li>
+                <li>Sábado somente manhã: {{ 'Sim' if agenda_config.sabado_somente_manha else 'Não' }}</li>
+                <li>Domingo fechado: {{ 'Sim' if agenda_config.domingo_fechado else 'Não' }}</li>
+            </ul>
+        </div>
+
+        <aside class="legend-side">
+            <div class="legend-title">Legenda</div>
+            <div class="legend">
+                <span class="legend-item"><span class="swatch livre"></span>Livre</span>
+                <span class="legend-item"><span class="swatch pendente"></span>Solicitado</span>
+                <span class="legend-item"><span class="swatch aprovada"></span>Reservado</span>
+                <span class="legend-item"><span class="swatch indisponivel"></span>Indisponível</span>
+            </div>
+        </aside>
+    </div>
+</section>
+
+{% if feriados_semana %}
+<section class="card">
+    <h3>Feriados nesta semana</h3>
+    <ul class="info-list">
+        {% for feriado in feriados_semana %}
+            <li>{{ feriado.data.strftime('%d/%m/%Y') }} - {{ feriado.descricao }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if not usuario_logado %}
+<section class="card login-cta">
+    <h3>Acesso com login</h3>
+    <p class="muted">Técnicos e professores utilizam login para gerenciar solicitações e reservas.</p>
+
+    <div class="login-access">
+        <a class="btn-secondary" href="{{ url_for('login') }}">Entrar</a>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

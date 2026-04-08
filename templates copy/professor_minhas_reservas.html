@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Minhas Reservas | NEXUS LAB{% endblock %}
+
+{% block content %}
+<section class="card hero-card">
+    <h1>Minhas reservas</h1>
+    <p class="muted">Acompanhe o status das suas solicitações.</p>
+</section>
+
+<section class="card">
+    {% if not minhas_reservas %}
+        <p class="muted">Você ainda não fez solicitações.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Laboratório</th>
+                        <th>Turno</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in minhas_reservas %}
+                        <tr>
+                            <td>{{ reserva.data.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ reserva.laboratorio.nome }}</td>
+                            <td>{{ turno_labels.get(reserva.turno, reserva.turno) }}</td>
+                            <td>
+                                <span class="badge {{ reserva.status }}">
+                                    {{ status_labels.get(reserva.status, reserva.status) }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

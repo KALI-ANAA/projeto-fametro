@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Configurações | NEXUS LAB{% endblock %}
+
+{% block content %}
+<section class="card hero-card">
+    <h1>Configuração da Agenda</h1>
+    <p class="muted">Defina as regras gerais de funcionamento dos laboratórios.</p>
+</section>
+
+<div class="grid two">
+    <section class="card">
+        <h2>Regras de disponibilidade</h2>
+
+        <form method="post" action="{{ url_for('update_agenda_config') }}">
+            <label class="check-item">
+                <input type="checkbox" name="sabado_fechado" {% if agenda_config.sabado_fechado %}checked{% endif %}>
+                Sábado fechado
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" name="sabado_somente_manha" {% if agenda_config.sabado_somente_manha %}checked{% endif %}>
+                Sábado somente manhã
+            </label>
+
+            <label class="check-item">
+                <input type="checkbox" name="domingo_fechado" {% if agenda_config.domingo_fechado %}checked{% endif %}>
+                Domingo fechado
+            </label>
+
+            <button type="submit">Salvar configuração</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Resumo atual</h2>
+        <ul class="info-list">
+            <li>Sábado fechado: {{ 'Sim' if agenda_config.sabado_fechado else 'Não' }}</li>
+            <li>Sábado somente manhã: {{ 'Sim' if agenda_config.sabado_somente_manha else 'Não' }}</li>
+            <li>Domingo fechado: {{ 'Sim' if agenda_config.domingo_fechado else 'Não' }}</li>
+        </ul>
+    </section>
+</div>
+{% endblock %}

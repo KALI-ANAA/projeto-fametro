@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitar Agendamento | NEXUS LAB{% endblock %}
+
+{% block content %}
+<section class="card hero-card">
+    <h1>Solicitar agendamento</h1>
+    <p class="muted">Escolha o laboratório, a data e o turno desejado.</p>
+</section>
+
+<section class="card">
+    {% if not laboratorios %}
+        <p class="muted">Não há laboratórios cadastrados ainda.</p>
+    {% else %}
+        <form method="post" action="{{ url_for('create_reserva') }}" class="form-grid">
+            <select name="laboratorio_id" required>
+                <option value="">Selecione um laboratório</option>
+                {% for lab in laboratorios %}
+                    <option value="{{ lab.id }}">{{ lab.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="date" name="data" min="{{ min_date }}" required>
+
+            <select name="turno" required>
+                <option value="">Selecione o turno</option>
+                {% for turno_key, turno_label in turnos %}
+                    <option value="{{ turno_key }}">{{ turno_label }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Solicitar reserva</button>
+        </form>
+    {% endif %}
+</section>
+{% endblock %}
